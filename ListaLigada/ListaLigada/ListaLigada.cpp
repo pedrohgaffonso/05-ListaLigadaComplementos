@@ -8,6 +8,7 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* ultimo = NULL;
 
 // headers
 void menu();
@@ -29,7 +30,7 @@ void menu()
 {
 	int op = 0;
 	while (op != 7) {
-		system("cls"); // somente no windows
+		//system("cls"); // somente no windows
 		cout << "Menu Lista Ligada";
 		cout << endl << endl;
 		cout << "1 - Inicializar Lista \n";
@@ -63,13 +64,13 @@ void menu()
 			break;
 		}
 
-		system("pause"); // somente no windows
+		//system("pause"); // somente no windows
 	}
 }
 
 void inicializar()
 {
-	// se a lista já possuir elementos
+	// se a lista jï¿½ possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -124,29 +125,77 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
+	NO* jaExiste = posicaoElemento(novo->valor);
+
+	if(jaExiste) {
+		cout << "O numero digitado ja esta presente na lista. Digite outro. \n";
+		return;
+	}
+
 	if (primeiro == NULL)
 	{
 		primeiro = novo;
+		ultimo = novo;
 	}
 	else
 	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+		// Insere no final da lista
+		ultimo->prox = novo;
+		ultimo = novo;
 	}
 }
 
 void excluirElemento()
 {
+	int valorD;
+	cout << "Digite o valor que quer excluir: ";
+	cin >> valorD;
 
+	NO* aux = primeiro;
+	while (aux->prox != NULL) {
+		NO* proxElemento = aux->prox;
+
+		if (primeiro->valor == valorD) {
+			free(primeiro);
+			primeiro = proxElemento;
+			break;
+		}
+
+		if(proxElemento->valor == valorD) {
+			aux->prox = proxElemento->prox;
+
+			free(proxElemento);
+			break;
+		}
+		aux = aux->prox;
+	}
 }
 
 void buscarElemento()
 {
+int valorD;
+	cout << "Digite o valor: ";
+	cin >> valorD;
 
+	NO* elemento = posicaoElemento(valorD);
+
+	if(elemento == NULL) {
+		cout << "Nenhum elemento foi encontrado!";
+		return;
+	}
+
+	cout << elemento->valor;
 }
 
+NO* posicaoElemento(int numero) {
+	NO* aux = primeiro;
+	while (aux != NULL) {
+		if (aux->valor == numero)
+		{
+			break;
+		}
+		aux = aux->prox;
+	}
+	return aux;
+}
 
